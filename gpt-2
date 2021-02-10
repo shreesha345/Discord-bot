@@ -1,0 +1,229 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "gpt-2.ipynb",
+      "provenance": [],
+      "mount_file_id": "1vSzewRIQy1Zvorkeh2c_Q2JDxwqM-1s-",
+      "authorship_tag": "ABX9TyPIKK9l1N8F867vX9Maveoh",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/shreesha345/Discord-bot/blob/main/gpt-2\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "w0V1WKPCVoAv",
+        "outputId": "02da1c91-1d3a-4d13-ff39-236aac167b02"
+      },
+      "source": [
+        "!git clone https://github.com/nshepperd/gpt-2.git"
+      ],
+      "execution_count": 1,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Cloning into 'gpt-2'...\n",
+            "remote: Enumerating objects: 375, done.\u001b[K\n",
+            "remote: Total 375 (delta 0), reused 0 (delta 0), pack-reused 375\u001b[K\n",
+            "Receiving objects: 100% (375/375), 4.42 MiB | 18.41 MiB/s, done.\n",
+            "Resolving deltas: 100% (207/207), done.\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "CalabyODWHJj",
+        "outputId": "ab459482-78ec-4e99-de64-2638abca5576"
+      },
+      "source": [
+        "%cd .."
+      ],
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "/content/gpt-2\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "fLeg-gtVWKwj",
+        "outputId": "637c2a46-07c3-4a43-e0a4-594ca1747603"
+      },
+      "source": [
+        "!python3 download_model.py 345M"
+      ],
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "\rFetching checkpoint:   0%|                                              | 0.00/77.0 [00:00<?, ?it/s]\rFetching checkpoint: 1.00kit [00:00, 736kit/s]                                                      \n",
+            "Fetching encoder.json: 1.04Mit [00:00, 49.9Mit/s]                                                   \n",
+            "Fetching hparams.json: 1.00kit [00:00, 842kit/s]                                                    \n",
+            "Fetching model.ckpt.data-00000-of-00001: 1.42Git [00:19, 74.6Mit/s]                                 \n",
+            "Fetching model.ckpt.index: 11.0kit [00:00, 7.58Mit/s]                                               \n",
+            "Fetching model.ckpt.meta: 927kit [00:00, 57.3Mit/s]                                                 \n",
+            "Fetching vocab.bpe: 457kit [00:00, 53.0Mit/s]                                                       \n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "4g0ZHxYfWzls",
+        "outputId": "fe774874-5dff-401f-d124-3ec5d3a66f37"
+      },
+      "source": [
+        "%cd src "
+      ],
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "/content/gpt-2/src\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "zoLlXNtJc2dU",
+        "outputId": "64a38973-73d6-497b-f2ed-a6cd037c8211"
+      },
+      "source": [
+        "!pip install tensorflow==1.12"
+      ],
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Collecting tensorflow==1.12\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/22/cc/ca70b78087015d21c5f3f93694107f34ebccb3be9624385a911d4b52ecef/tensorflow-1.12.0-cp36-cp36m-manylinux1_x86_64.whl (83.1MB)\n",
+            "\u001b[K     |████████████████████████████████| 83.1MB 68kB/s \n",
+            "\u001b[?25hRequirement already satisfied: numpy>=1.13.3 in /usr/local/lib/python3.6/dist-packages (from tensorflow==1.12) (1.19.5)\n",
+            "Requirement already satisfied: six>=1.10.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow==1.12) (1.15.0)\n",
+            "Requirement already satisfied: gast>=0.2.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow==1.12) (0.3.3)\n",
+            "Requirement already satisfied: termcolor>=1.1.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow==1.12) (1.1.0)\n",
+            "Collecting tensorboard<1.13.0,>=1.12.0\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/07/53/8d32ce9471c18f8d99028b7cef2e5b39ea8765bd7ef250ca05b490880971/tensorboard-1.12.2-py3-none-any.whl (3.0MB)\n",
+            "\u001b[K     |████████████████████████████████| 3.1MB 39.0MB/s \n",
+            "\u001b[?25hRequirement already satisfied: grpcio>=1.8.6 in /usr/local/lib/python3.6/dist-packages (from tensorflow==1.12) (1.32.0)\n",
+            "Requirement already satisfied: wheel>=0.26 in /usr/local/lib/python3.6/dist-packages (from tensorflow==1.12) (0.36.2)\n",
+            "Requirement already satisfied: astor>=0.6.0 in /usr/local/lib/python3.6/dist-packages (from tensorflow==1.12) (0.8.1)\n",
+            "Requirement already satisfied: protobuf>=3.6.1 in /usr/local/lib/python3.6/dist-packages (from tensorflow==1.12) (3.12.4)\n",
+            "Requirement already satisfied: absl-py>=0.1.6 in /usr/local/lib/python3.6/dist-packages (from tensorflow==1.12) (0.10.0)\n",
+            "Collecting keras-applications>=1.0.6\n",
+            "\u001b[?25l  Downloading https://files.pythonhosted.org/packages/71/e3/19762fdfc62877ae9102edf6342d71b28fbfd9dea3d2f96a882ce099b03f/Keras_Applications-1.0.8-py3-none-any.whl (50kB)\n",
+            "\u001b[K     |████████████████████████████████| 51kB 5.5MB/s \n",
+            "\u001b[?25hRequirement already satisfied: keras-preprocessing>=1.0.5 in /usr/local/lib/python3.6/dist-packages (from tensorflow==1.12) (1.1.2)\n",
+            "Requirement already satisfied: werkzeug>=0.11.10 in /usr/local/lib/python3.6/dist-packages (from tensorboard<1.13.0,>=1.12.0->tensorflow==1.12) (1.0.1)\n",
+            "Requirement already satisfied: markdown>=2.6.8 in /usr/local/lib/python3.6/dist-packages (from tensorboard<1.13.0,>=1.12.0->tensorflow==1.12) (3.3.3)\n",
+            "Requirement already satisfied: setuptools in /usr/local/lib/python3.6/dist-packages (from protobuf>=3.6.1->tensorflow==1.12) (53.0.0)\n",
+            "Requirement already satisfied: h5py in /usr/local/lib/python3.6/dist-packages (from keras-applications>=1.0.6->tensorflow==1.12) (2.10.0)\n",
+            "Requirement already satisfied: importlib-metadata; python_version < \"3.8\" in /usr/local/lib/python3.6/dist-packages (from markdown>=2.6.8->tensorboard<1.13.0,>=1.12.0->tensorflow==1.12) (3.4.0)\n",
+            "Requirement already satisfied: zipp>=0.5 in /usr/local/lib/python3.6/dist-packages (from importlib-metadata; python_version < \"3.8\"->markdown>=2.6.8->tensorboard<1.13.0,>=1.12.0->tensorflow==1.12) (3.4.0)\n",
+            "Requirement already satisfied: typing-extensions>=3.6.4; python_version < \"3.8\" in /usr/local/lib/python3.6/dist-packages (from importlib-metadata; python_version < \"3.8\"->markdown>=2.6.8->tensorboard<1.13.0,>=1.12.0->tensorflow==1.12) (3.7.4.3)\n",
+            "Installing collected packages: tensorboard, keras-applications, tensorflow\n",
+            "  Found existing installation: tensorboard 2.4.1\n",
+            "    Uninstalling tensorboard-2.4.1:\n",
+            "      Successfully uninstalled tensorboard-2.4.1\n",
+            "  Found existing installation: tensorflow 2.4.1\n",
+            "    Uninstalling tensorflow-2.4.1:\n",
+            "      Successfully uninstalled tensorflow-2.4.1\n",
+            "Successfully installed keras-applications-1.0.8 tensorboard-1.12.2 tensorflow-1.12.0\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "1d0q2pNEbgWc",
+        "outputId": "fc9e6862-f2a9-4ce7-9f4d-d4c448899d51"
+      },
+      "source": [
+        "!python train.py --dataset training.npz"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "/usr/local/lib/python3.6/dist-packages/tensorflow/python/framework/dtypes.py:523: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.\n",
+            "  _np_qint8 = np.dtype([(\"qint8\", np.int8, 1)])\n",
+            "/usr/local/lib/python3.6/dist-packages/tensorflow/python/framework/dtypes.py:524: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.\n",
+            "  _np_quint8 = np.dtype([(\"quint8\", np.uint8, 1)])\n",
+            "/usr/local/lib/python3.6/dist-packages/tensorflow/python/framework/dtypes.py:525: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.\n",
+            "  _np_qint16 = np.dtype([(\"qint16\", np.int16, 1)])\n",
+            "/usr/local/lib/python3.6/dist-packages/tensorflow/python/framework/dtypes.py:526: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.\n",
+            "  _np_quint16 = np.dtype([(\"quint16\", np.uint16, 1)])\n",
+            "/usr/local/lib/python3.6/dist-packages/tensorflow/python/framework/dtypes.py:527: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.\n",
+            "  _np_qint32 = np.dtype([(\"qint32\", np.int32, 1)])\n",
+            "/usr/local/lib/python3.6/dist-packages/tensorflow/python/framework/dtypes.py:532: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.\n",
+            "  np_resource = np.dtype([(\"resource\", np.ubyte, 1)])\n",
+            "2021-02-10 10:21:06.972593: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA\n",
+            "Loading checkpoint models/345M/model.ckpt\n",
+            "Loading dataset...\n",
+            "100% 1/1 [00:00<00:00, 241.08it/s]\n",
+            "dataset has 3170 tokens\n",
+            "Training...\n",
+            "[1 | 201.24] loss=2.90 avg=2.90\n",
+            "[2 | 391.13] loss=2.92 avg=2.91\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    }
+  ]
+}
